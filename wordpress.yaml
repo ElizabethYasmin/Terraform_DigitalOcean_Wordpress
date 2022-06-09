@@ -1,0 +1,22 @@
+#cloud-config
+groups:
+  - ubuntu: [root,sys]
+  - hashicorp
+
+# Add users to the system. Users are added after groups are added.
+users:
+  - default
+  - name: terraform
+    gecos: terraform
+    shell: /bin/bash
+    primary_group: hashicorp
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    lock_passwd: false
+    ssh_authorized_keys:
+      - dop_v1_d36abcbc0181556e5d3398232ceb6061fbf934ff10cc843629c31453ff95dd2c
+
+runcmd:
+  - sudo apt-get update
+  - sudo curl https://raw.githubusercontent.com/reqhiem/wordpress-docker/master/stack.yml -O
+  - sudo docker-compose -f stack.yml up
